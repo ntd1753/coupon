@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CouponHistory extends Model
+class Category extends Model
 {
     use HasFactory;
-
+    function products(){
+        return $this->hasMany(Product::class);
+    }
 }

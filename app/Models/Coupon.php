@@ -24,4 +24,20 @@ class Coupon extends Model
         'use_limit_per_user',  // Số lượt sử dụng cho mỗi khách hàng (optional)
         'multiple_use',        // Dùng cùng với các voucher khác (Yes/No)
     ];
+    function couponHistories(){
+        return $this->hasMany(CouponHistory::class);
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'coupon_histories', 'coupon_id', 'user_id')
+            ->withPivot('order_id', 'discount_amount', 'created_at', 'updated_at')
+            ->withTimestamps();
+    }
+    public function scope(){
+        return $this->hasMany(CouponScope::class);
+    }
+    public function vendor(){
+        return $this->belongsTo(User::class, 'vendor_id');
+    }
+
 }

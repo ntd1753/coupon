@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\CouponHistory;
 use App\Models\CouponScope;
@@ -12,7 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class CouponController extends Controller
 {
-    function add(Request $request){
+    function add(){
+        return view('coupon.add',[
+            'categories'=>Category::all(),
+        ]);
+    }
+    function store(Request $request){
             // Validate input data
             $validator = Validator::make($request->all(), [
                 'code' => 'required|string|unique:coupons',
@@ -28,7 +34,7 @@ class CouponController extends Controller
                 'use_limit' => 'nullable|integer|min:0',
                 'use_limit_per_user' => 'nullable|integer|min:0',
                 'multiple_use' => 'required|in:yes,no',
-                'model_type' => 'required|string|in:category,campaigner,product',
+                //'model_type' => 'required|string|in:category,campaigner,product',
                 'model_id' => 'nullable|integer',
             ]);
 
