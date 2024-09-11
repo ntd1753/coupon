@@ -24,6 +24,7 @@ class OrderController extends Controller
         ]);
         $cart = Cart::find($cartId);
         $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
+        $coupon =Coupon::find(8);
         // check có tồn tại ko
         if (!$coupon) {
             return response()->json(['message' => 'Invalid coupon code.'], 404);
@@ -33,18 +34,26 @@ class OrderController extends Controller
             return response()->json(['message' => 'Coupon expired or not valid yet.'], 400);
         }
         //check lượt sử dụng
-
         $couponUsedCount=CouponHistory::where('coupon_id',$coupon->id)->where('user_id',Auth::user()->id)->count();
         if (($coupon->use_limit - $coupon->total_use)==0 || $coupon->use_limit_per_user==$couponUsedCount){
             return response()->json(['message' => 'Coupon expired or not valid yet.'], 400);
         }
         //check số đơn mua
-        if ($coupon->minimum_purchases>Auth::user()->orders()->count()){
-            return response()->json(['message' => 'not eligible to use coupon'], 400);
+        if ($coupon->minimum_purchases == 0) {
+            // Không cần thực hiện gì nếu điều kiện này đúng
+        } elseif ($coupon->minimum_purchases > Auth::user()->orders()->count()) {
+            return response()->json(['message' => 'Not eligible to use coupon'], 400);
+        }
+        if ($coupon->maximum_purchases != null){
+            if ($coupon->maximum_purchases<=Auth::user()->orders()->count()){
+                return response()->json(['message' => 'Not eligible to use coupon'], 400);
+            }
         }
         //check giớ hạn giá trị đơn
-        if ($coupon->minimum_price>$cart->total_price){
-            return response()->json(['message' => 'not eligible to use coupon'], 400);
+        if ($coupon->minimum_price != null && $coupon->minimum_price != 0){
+            if ($coupon->minimum_price>$cart->total_price){
+                return response()->json(['message' => 'not eligible to use coupon'], 400);
+            }
         }
         //check phạm vi của coupon
         // Kiểm tra phạm vi của coupon

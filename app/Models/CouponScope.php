@@ -13,4 +13,12 @@ class CouponScope extends Model
         'model_type',
         'model_id',
     ];
+    public function category()
+    {
+        return $this->hasOne(Category::class, "id","model_id");
+    }
+    public function product()
+    {
+        return $this->hasOne(Product::class, "id","model_id");
+    }
 }

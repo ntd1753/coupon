@@ -40,31 +40,32 @@
             <div class="relative">
                 <select id="scope" name="scope_model_type"
                         class="block w-full mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option value="all">Tất cả sản phẩm</option>
+                    <option value="null">Tất cả sản phẩm</option>
                     <option value="category">Áp dụng theo danh mục</option>
+                    <option value="product">Áp dụng theo sản phẩm</option>
                 </select>
             </div>
         </div>
         <!-- Additional select for categories (initially hidden) -->
         <div id="category-select-container" style="display: none;" class="mt-3">
             <label for="category">Chọn danh mục:</label>
-            <select id="category" name="model_id"
+            <select id="category" name="model_ids[]" multiple
                     class="block w-full mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 @foreach($categories as $category)
                     <option value="{{$category->id}}">{{$category->name}}</option>
                 @endforeach
-
-
             </select>
+            <small class="text-gray-500">Giữ phím Ctrl (Windows) hoặc Command (Mac) để chọn nhiều danh mục.</small>
         </div>
-        <div id="campaign-select-container" style="display: none;" class="mt-3">
-            <label for="campaign">Chọn chiến dịch:</label>
-            <select id="campaign" name="model_id"
+        <div id="product-select-container" style="display: none;" class="mt-3">
+            <label for="campaign">Chọn sản phẩm:</label>
+            <select id="category" name="model_ids[]" multiple
                     class="block w-full mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="1">Chiến dịch 1</option>
-                <option value="2">Chiến dịch 2</option>
-                <option value="3">Chiến dịch 3</option>
+                @foreach($products as $product)
+                    <option value="{{$product->id}}">{{$product->name}}</option>
+                @endforeach
             </select>
+            <small class="text-gray-500">Giữ phím Ctrl (Windows) hoặc Command (Mac) để chọn nhiều danh mục.</small>
         </div>
         <div>
             <label for="minimum_purchases" class="block font-medium text-gray-700">Số đơn hàng tối thiểu đã mua:</label>
@@ -122,7 +123,7 @@
 <script>
     document.getElementById('scope').addEventListener('change', function() {
         var categorySelectContainer = document.getElementById('category-select-container');
-        var campaignSelectContainer = document.getElementById('campaign-select-container');
+        var campaignSelectContainer = document.getElementById('product-select-container');
 
         if (this.value == 'category') {
             // Show category select when "Áp dụng theo danh mục" is selected
@@ -131,7 +132,7 @@
             // Hide category select for other options
             categorySelectContainer.style.display = 'none';
         }
-        if (this.value == 'campainer') {
+        if (this.value == 'product') {
             // Show category select when "Áp dụng theo danh mục" is selected
             campaignSelectContainer.style.display = 'block';
         } else {

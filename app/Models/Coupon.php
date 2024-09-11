@@ -9,7 +9,7 @@ class Coupon extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'vendor',
+        'vendor_id',
         'code',                // Mã Giảm giá
         'discount_type',       // Loại giảm giá (Giảm phần trăm/Giảm giá tiền)
         'discount_amount',     // Phần trăm giảm giá/Số tiền giảm giá

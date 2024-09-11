@@ -7,15 +7,27 @@ use App\Models\Coupon;
 use App\Models\CouponHistory;
 use App\Models\CouponScope;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\User;
 class CouponController extends Controller
 {
+    function index(){
+        return view('coupon.index',['coupons'=>Coupon::all()]);
+    }
     function add(){
+        if (Auth::user()->hasRole('admin')){
+            $products=Product::all();
+        }
+        if (Auth::user()->hasRole('agency')){
+            $products=Product::where('vendor_id',Auth::user()->id)->get();
+        }
+
         return view('coupon.add',[
             'categories'=>Category::all(),
+            'products'=>$products
         ]);
     }
     function store(Request $request){
@@ -34,7 +46,6 @@ class CouponController extends Controller
                 'use_limit' => 'nullable|integer|min:0',
                 'use_limit_per_user' => 'nullable|integer|min:0',
                 'multiple_use' => 'required|in:yes,no',
-                //'model_type' => 'required|string|in:category,campaigner,product',
                 'model_id' => 'nullable|integer',
             ]);
 
@@ -45,7 +56,7 @@ class CouponController extends Controller
             //dd($request->all());
             // Create the coupon
             $coupon = Coupon::create([
-                'vendor_id'=>1,
+                'vendor_id'=>Auth::user()->id,
                 'code' => $request->input('code'),
                 'discount_type' => $request->input('discount_type'),
                 'discount_amount' => $request->input('discount_amount'),
@@ -59,13 +70,20 @@ class CouponController extends Controller
                 'use_limit' => $request->input('use_limit'),
                 'use_limit_per_user' => $request->input('use_limit_per_user'),
                 'multiple_use' => $request->input('multiple_use'),
-                'total_use' => 0, // Default to 0 uses initially
+                'total_use' => 0,
             ]);
-            $couponScope=CouponScope::create([
-                'coupon_id'=>$coupon->id,
-                'model_type'=>$request->input('scope_model_type'),
-                "model_id"=>$request->input('model_id'),
-            ]);
-            return response()->json(['message' => 'Coupon created successfully.', 'coupon' => $coupon], 201);
+            if ($request->input('scope_model_type')!=null){
+                if ($request->has('model_ids')) {
+                    foreach ($request->input('model_ids') as $modelId) {
+                        CouponScope::create([
+                            'coupon_id' => $coupon->id,
+                            'model_type' => $request->input('scope_model_type'),
+                            'model_id' => $modelId,
+                        ]);
+                    }
+                }
+            }
+
+            return redirect()->route('coupon.index');
         }
 }
