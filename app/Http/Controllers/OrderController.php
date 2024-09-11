@@ -24,7 +24,7 @@ class OrderController extends Controller
         ]);
         $cart = Cart::find($cartId);
         $coupon = Coupon::where('code', $request->input('coupon_code'))->first();
-        $coupon =Coupon::find(8);
+
         // check có tồn tại ko
         if (!$coupon) {
             return response()->json(['message' => 'Invalid coupon code.'], 404);
@@ -68,12 +68,12 @@ class OrderController extends Controller
                     $modelIds = $coupon->scope()->pluck('model_id');
                     $count=0;
                     foreach ($modelIds as $modelId){
-                        if ($cartItem->category_id==$modelId){
+                        if ($cartItem->product->category_id==$modelId){
                             $count++;
                         }
                     }
                     if ($count==0){
-                        return response()->json(['message' => $cartItem->product->name.'not eligible to use coupon'], 400);
+                        return response()->json(['message' => $cartItem->product->name.'not eligible to use coupon '], 400);
                     }
                 }
             }
@@ -132,6 +132,6 @@ class OrderController extends Controller
         $cart->final_price = $cart->total_price - $discount;
         $cart->save();
 
-        return response()->json(['message' => 'Coupon applied successfully.', 'discount' => $discount], 200);
+        return response()->json(['message' => 'Coupon applied successfully.', 'discount' => $discount, 'cart' => $cart->final_price], 200);
     }
 }

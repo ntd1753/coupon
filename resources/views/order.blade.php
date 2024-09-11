@@ -59,7 +59,8 @@
                     $('#final-price').text(response.final_price);
                     alert('Coupon applied successfully!');
                 } else {
-                    alert(response.message); // Hiển thị lỗi nếu có
+                    alert(response.message + " final_total:" + JSON.stringify(response.cart));
+
                 }
             },
             error: function(xhr, status, error) {
