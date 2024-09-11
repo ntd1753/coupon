@@ -66,13 +66,13 @@ class OrderController extends Controller
                 foreach ($cartItems as $cartItem) {
                     // Kiểm tra nếu 'category_id' của cartItem không khớp với 'model_id' của scope
                     $modelIds = $coupon->scope()->pluck('model_id');
-                    $count=0;
+                    $check=false;
                     foreach ($modelIds as $modelId){
                         if ($cartItem->product->category_id==$modelId){
-                            $count++;
+                            $check=true;
                         }
                     }
-                    if ($count==0){
+                    if (!$check){
                         return response()->json(['message' => $cartItem->product->name.'not eligible to use coupon '], 400);
                     }
                 }
@@ -84,13 +84,13 @@ class OrderController extends Controller
                 foreach ($cartItems as $cartItem) {
                     // Kiểm tra nếu 'category_id' của cartItem không khớp với 'model_id' của scope
                     $modelIds = $coupon->scope()->pluck('model_id');
-                    $count=0;
+                    $check=false;
                     foreach ($modelIds as $modelId){
                         if ($cartItem->product_id==$modelId){
-                            $count++;
+                            $check=true;
                         }
                     }
-                    if ($count==0){
+                    if (!$check){
                         return response()->json(['message' => $cartItem->product->name.'not eligible to use coupon'], 400);
                     }
                 }
@@ -102,13 +102,13 @@ class OrderController extends Controller
             $cartItems = $cart->cartItem;
             foreach ($cartItems as $cartItem) {
                 // Kiểm tra nếu 'category_id' của cartItem không khớp với 'model_id' của scope
-                $count=0;
+                $check=false;
                 foreach ($productIdOfVendors as $productIdOfVendor){
                     if ($cartItem->product_id==$productIdOfVendor){
-                        $count++;
+                        $check=true;
                     }
                 }
-                if ($count==0){
+                if ($check==false){
                     return response()->json(['message' => $cartItem->product->name.'not eligible to use coupon'], 400);
                 }
             }
