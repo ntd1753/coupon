@@ -68,5 +68,7 @@ Route::get('/coupon',[CouponController::class,'index'])->name('coupon.index');
 
 Route::get('/loyalty/set', [ConfigController::class, 'getLoyalty'])->name('config.loyalty');
 Route::post('/loyalty/set', [ConfigController::class, 'settingLoyalty'])->name('config.loyalty.set');
-Route::get('/loyalty/earn/{orderId}', [LoyaltyController::class, 'earnPointsFromOrder'])->name('loyalty.earn');
-Route::get('/loyalty/membership/update/{userId}', [LoyaltyController::class, 'updateMembership'])->name('loyalty.membership.update');
+Route::post('/loyalty/earn/{orderId}', [LoyaltyController::class, 'earnPointsFromOrder'])->name('loyalty.earn');
+Route::post('/loyalty/membership/update/{userId}', [LoyaltyController::class, 'updateMembership'])->name('loyalty.membership.update');
+Route::post('/loyalty/redeem', [LoyaltyController::class, 'redeemPoints']);
+
