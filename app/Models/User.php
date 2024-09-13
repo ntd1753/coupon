@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'membership_level_id',
+        'membership_expires_at',
     ];
 
     /**
@@ -32,6 +34,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'membership_level_id',
+        'membership_expires_at',
     ];
 
     /**
@@ -42,13 +46,28 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function orders(){
-        return $this->hasMany(Order::class);
-    }
+
     public function CouponHistory(){
         return $this->hasMany(CouponHistory::class);
     }
     function products(){
         return $this->hasMany(Product::class,'vendor_id','id');
+    }
+    public function membershipLevel()
+    {
+        return $this->belongsTo(LoyaltyMembership::class, 'membership_level_id');
+    }
+    public function loyalty()
+    {
+        return $this->hasOne(Loyalty::class);
+    }
+
+    public function loyaltyTransactions()
+    {
+        return $this->hasMany(LoyaltyTransaction::class);
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

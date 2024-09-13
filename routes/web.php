@@ -4,9 +4,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\LoyaltyController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ConfigController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', function () {
+    return view('welcome');
+});
+Route::get('/home', function () {
     return view('welcome');
 })->name('home');
 
@@ -60,3 +65,8 @@ Route::group(['prefix' => 'product', 'middleware' => ['role:admin|agency']], fun
 Route::middleware('role:user')->get('/coupon/apply/{cartId}',[OrderController::class,'showOrder'])->name('coupon.apply');
 Route::middleware('role:user')->post('/coupon/apply/{cartId}',[OrderController::class,'applyCoupon'])->name('cart.applyCoupon');
 Route::get('/coupon',[CouponController::class,'index'])->name('coupon.index');
+
+Route::get('/loyalty/set', [ConfigController::class, 'getLoyalty'])->name('config.loyalty');
+Route::post('/loyalty/set', [ConfigController::class, 'settingLoyalty'])->name('config.loyalty.set');
+Route::get('/loyalty/earn/{orderId}', [LoyaltyController::class, 'earnPointsFromOrder'])->name('loyalty.earn');
+Route::get('/loyalty/membership/update/{userId}', [LoyaltyController::class, 'updateMembership'])->name('loyalty.membership.update');

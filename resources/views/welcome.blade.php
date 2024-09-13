@@ -32,22 +32,23 @@
             @endif
 
                 <div class="max-w-7xl mx-auto p-6 lg:p-8">
-                    @if(auth()->check() && auth()->user()->hasRole('admin') || auth()->user()->hasRole('agency'))
-                        <a href="{{ route('category.store') }}" class="btn btn-primary">Thêm danh mục</a> <br>
-                    @endif
-                        @if(auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('agency')))
-                            <a href="{{ route('products.add') }}" class="btn btn-primary">Thêm sản phẩm</a> <br>
+                    @auth()
+                        @if(auth()->check() && auth()->user()->hasRole('admin') || auth()->user()->hasRole('agency'))
+                            <a href="{{ route('category.store') }}" class="btn btn-primary">Thêm danh mục</a> <br>
                         @endif
-                        @if(auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('agency')))
-                            <a href="{{ route('coupon.add') }}" class="btn btn-primary">Thêm mã giảm giá</a> <br>
-                        @endif
-                        @if(auth()->check() && auth()->user()->hasRole('user'))
-                            <a href="{{ route('cart.add') }}" class="btn btn-primary">Thêm vào giỏ hàng</a> <br>
-                        @endif
-                        @if(auth()->check() && auth()->user()->hasRole('user'))
-                            <a href="{{ route('coupon.apply', ['cartId' => $cartId]) }}" class="btn btn-primary">Áp dụng mã giảm giá</a> <br>
-                        @endif
-
+                            @if(auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('agency')))
+                                <a href="{{ route('products.add') }}" class="btn btn-primary">Thêm sản phẩm</a> <br>
+                            @endif
+                            @if(auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('agency')))
+                                <a href="{{ route('coupon.add') }}" class="btn btn-primary">Thêm mã giảm giá</a> <br>
+                            @endif
+                            @if(auth()->check() && auth()->user()->hasRole('user'))
+                                <a href="{{ route('cart.add') }}" class="btn btn-primary">Thêm vào giỏ hàng</a> <br>
+                            @endif
+                            @if(auth()->check() && auth()->user()->hasRole('user'))
+                                <a href="{{ route('coupon.apply', ['cartId' => $cartId]) }}" class="btn btn-primary">Áp dụng mã giảm giá</a> <br>
+                            @endif
+                    @endauth
 
                 </div>
 

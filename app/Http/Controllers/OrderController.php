@@ -134,4 +134,5 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Coupon applied successfully.', 'discount' => $discount, 'cart' => $cart->final_price], 200);
     }
+
 }
