@@ -79,4 +79,5 @@ Route::get('/tinymce', function (){
 });
 Route::post('/post', [\App\Http\Controllers\PostController::class,'store'])->name('post.add');
 Route::get('/post/detail/{postId}',[\App\Http\Controllers\PostController::class,'detail']);
-
+Route::get('/login/{provider}', [AuthController::class, 'redirectToProvider'])->name("auth.login.provider");
+Route::get('/login/{provider}/callback', [AuthController::class, 'handleProviderCallback'])->name('auth.login.provider.callback');

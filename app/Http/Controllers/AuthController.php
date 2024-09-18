@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+
 class AuthController extends Controller
 {
     public function login(Request $request)
@@ -66,6 +69,29 @@ class AuthController extends Controller
 
         // Điều hướng tới trang chủ sau khi đăng ký thành công
         return redirect()->route('home')->with('success', 'Đăng ký thành công!');
+    }
+    public function redirectToProvider($provider)
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    public function handleProviderCallback($provider)
+    {
+        $socialUser = Socialite::driver($provider)->stateless()->user();
+        //Tìm hoặc tạo người dùng mới
+        $user = User::firstOrCreate([
+            'email' => $socialUser->getEmail(),
+        ], [
+            'name' => $socialUser->getName(),
+            'provider' => 'google',
+            'provider_id' => $socialUser->getId(),
+            'avatar' => $socialUser->getAvatar(),
+            'password' => Hash::make(Str::password(24)),
+        ]);
+
+        // Đăng nhập người dùng
+        Auth::login($user, true);
+        return redirect()->route('home')->with('success', 'Đăng nhập thành công!');
     }
 }
 
