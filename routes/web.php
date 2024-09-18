@@ -71,4 +71,12 @@ Route::post('/loyalty/set', [ConfigController::class, 'settingLoyalty'])->name('
 Route::post('/loyalty/earn/{orderId}', [LoyaltyController::class, 'earnPointsFromOrder'])->name('loyalty.earn');
 Route::post('/loyalty/membership/update/{userId}', [LoyaltyController::class, 'updateMembership'])->name('loyalty.membership.update');
 Route::post('/loyalty/redeem', [LoyaltyController::class, 'redeemPoints']);
+Route::get('/file-manager', function (){
+    return view('file-manager');
+});
+Route::get('/tinymce', function (){
+    return view('post.add');
+});
+Route::post('/post', [\App\Http\Controllers\PostController::class,'store'])->name('post.add');
+Route::get('/post/detail/{postId}',[\App\Http\Controllers\PostController::class,'detail']);
 
