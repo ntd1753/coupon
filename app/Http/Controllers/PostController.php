@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     function store(Request $request){
-        dd($request->input('content'));
         $post=new Post();
         $post->content=$request->input('content');
         $post->save();
